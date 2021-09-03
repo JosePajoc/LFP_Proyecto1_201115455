@@ -1,7 +1,6 @@
 from tkinter import filedialog                      #Módulo para abrir ventana de selección
 from tkinter import messagebox                      #Módulo para cuadros de mensaje
 from tkinter import *                               #Módulo para entorno gráfico
-from tkinter.simpledialog import *                  #Dialogos de entrada, debe ir antes del PIL caso contrario da error
 from PIL import Image, ImageTk                      #Instalar módulo, pip install Pillow, para usar imagenes con más opciones
 import webbrowser                                   #Módulo para abrir automaticamente el navegador
 
