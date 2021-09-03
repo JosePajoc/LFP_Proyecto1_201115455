@@ -4,6 +4,9 @@ from tkinter import *                               #Módulo para entorno gráfi
 from PIL import Image, ImageTk                      #Instalar módulo, pip install Pillow, para usar imagenes con más opciones
 import webbrowser                                   #Módulo para abrir automaticamente el navegador
 
+#-----------------------------------------Variables globales-----------------------------------------------------
+rutaArchivo = ''
+
 #-------------------------------------------Ventana inicial-----------------------------------------------------------
 ventanaInicial = Tk()                                           #Objeto de tipo ventana
 ventanaInicial.title('Bitxelart')
@@ -14,7 +17,34 @@ marcoInicial.pack()                                             #Marco agregado 
 
 #------------------------------------------Fuciones--------------------------------------------------------------
 def abrirArchivo():
-    print('Holaa')
+    global rutaArchivo
+    rutaArchivo = filedialog.askopenfilename(title = "Seleccionar archivo XML")
+    if rutaArchivo == '':
+        messagebox.showinfo('Error','No se selecciono nigún archivo')
+    else:
+        messagebox.showinfo('Información','Cargado con éxito')
+        print(rutaArchivo)
+        habilitarBotones()
+
+def habilitarBotones():
+    btnCargar = Button(marcoInicial, text='Cargar', state=DISABLED)
+    btnCargar.place(x=50, y=20)
+    btnAnalizar = Button(marcoInicial, text='Analizar archivo')
+    btnAnalizar.place(x=120, y=20)
+    btnReportes = Button(marcoInicial, text='Ver reportes')
+    btnReportes.place(x=240, y=20)
+    btnSeleccionarImg = Button(marcoInicial, text='Seleccionar imagen')
+    btnSeleccionarImg.place(x=330, y=20)
+    btnVerImg = Button(marcoInicial, text='Ver imagen')
+    btnVerImg.place(x=460, y=20)
+    btnOriginal = Button(marcoInicial, text='ORIGINAL')
+    btnOriginal.place(x=60, y=170)
+    btnMirrorX = Button(marcoInicial, text='MirrorX')
+    btnMirrorX.place(x=60, y=220)
+    btnMirrorY = Button(marcoInicial, text='MirrorY')
+    btnMirrorY.place(x=60, y=270)
+    btnDoubleMirror = Button(marcoInicial, text='DoubleMirror')
+    btnDoubleMirror.place(x=60, y=320)
 
 #------------------------------------------ Widgets de la ventana inicial----------------------------------------
 btnCargar = Button(marcoInicial, text='Cargar', command=abrirArchivo)
