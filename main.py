@@ -21,7 +21,7 @@ def habilitarBotones():
     global rutaArchivo
     btnCargar = Button(marcoInicial, text='Cargar', state=DISABLED)
     btnCargar.place(x=50, y=20)
-    btnAnalizar = Button(marcoInicial, text='Analizar archivo', command=analizarArchivo(rutaArchivo))
+    btnAnalizar = Button(marcoInicial, text='Analizar archivo', command=analizarArchivo)
     btnAnalizar.place(x=120, y=20)
     btnReportes = Button(marcoInicial, text='Ver reportes')
     btnReportes.place(x=240, y=20)
@@ -41,7 +41,7 @@ def habilitarBotones():
 def abrirArchivo():
     global rutaArchivo
     rutaArchivo = filedialog.askopenfilename(title = "Seleccionar archivo XML")
-    extension = re.findall('(\.pxla)$', rutaArchivo)            #ER - 1
+    extension = re.findall('(\.pxla)$', rutaArchivo)                    #<------------ ER - 1
     
     if rutaArchivo == '':
         messagebox.showinfo('Error','No se selecciono nigún archivo')
@@ -50,9 +50,16 @@ def abrirArchivo():
         habilitarBotones()
     else:
         messagebox.showinfo('Error','El archivo seleccionado no posee extisón \'.pxla\'')
+        rutaArchivo = ''
 
-def analizarArchivo(ruta):
-    print(ruta)
+def analizarArchivo():
+    global rutaArchivo
+    if rutaArchivo != '':
+        archivoCargado = open(rutaArchivo, 'r')
+        archivoPXLA = archivoCargado.read()
+        archivoCargado.close()
+        print(rutaArchivo)
+        print(archivoPXLA)
 
 #------------------------------------------ Widgets de la ventana inicial----------------------------------------
 btnCargar = Button(marcoInicial, text='Cargar', command=abrirArchivo)
