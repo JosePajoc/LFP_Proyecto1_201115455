@@ -2,6 +2,7 @@ from tkinter import filedialog                      #Módulo para abrir ventana 
 from tkinter import messagebox                      #Módulo para cuadros de mensaje
 from tkinter import *                               #Módulo para entorno gráfico
 from PIL import Image, ImageTk                      #Instalar módulo, pip install Pillow, para usar imagenes con más opciones
+import re                                           #Módulo de expresiones regulares
 import webbrowser                                   #Módulo para abrir automaticamente el navegador
 
 #-----------------------------------------Variables globales-----------------------------------------------------
@@ -16,20 +17,11 @@ marcoInicial = Frame(ventanaInicial, width="800", height="550")
 marcoInicial.pack()                                             #Marco agregado a la ventana
 
 #------------------------------------------Fuciones--------------------------------------------------------------
-def abrirArchivo():
-    global rutaArchivo
-    rutaArchivo = filedialog.askopenfilename(title = "Seleccionar archivo XML")
-    if rutaArchivo == '':
-        messagebox.showinfo('Error','No se selecciono nigún archivo')
-    else:
-        messagebox.showinfo('Información','Cargado con éxito')
-        print(rutaArchivo)
-        habilitarBotones()
-
 def habilitarBotones():
+    global rutaArchivo
     btnCargar = Button(marcoInicial, text='Cargar', state=DISABLED)
     btnCargar.place(x=50, y=20)
-    btnAnalizar = Button(marcoInicial, text='Analizar archivo')
+    btnAnalizar = Button(marcoInicial, text='Analizar archivo', command=analizarArchivo(rutaArchivo))
     btnAnalizar.place(x=120, y=20)
     btnReportes = Button(marcoInicial, text='Ver reportes')
     btnReportes.place(x=240, y=20)
@@ -45,6 +37,22 @@ def habilitarBotones():
     btnMirrorY.place(x=60, y=270)
     btnDoubleMirror = Button(marcoInicial, text='DoubleMirror')
     btnDoubleMirror.place(x=60, y=320)
+
+def abrirArchivo():
+    global rutaArchivo
+    rutaArchivo = filedialog.askopenfilename(title = "Seleccionar archivo XML")
+    extension = re.findall('(\.pxla)$', rutaArchivo)            #ER - 1
+    
+    if rutaArchivo == '':
+        messagebox.showinfo('Error','No se selecciono nigún archivo')
+    elif len(extension)>0 and extension[0] == '.pxla':
+        messagebox.showinfo('Información','Cargado con éxito')
+        habilitarBotones()
+    else:
+        messagebox.showinfo('Error','El archivo seleccionado no posee extisón \'.pxla\'')
+
+def analizarArchivo(ruta):
+    print(ruta)
 
 #------------------------------------------ Widgets de la ventana inicial----------------------------------------
 btnCargar = Button(marcoInicial, text='Cargar', command=abrirArchivo)
