@@ -8,6 +8,7 @@ import webbrowser                                   #Módulo para abrir automati
 #-----------------------------------------Variables globales-----------------------------------------------------
 rutaArchivo = ''
 archivoPXLA = None
+imagenes = []
 
 #-------------------------------------------Ventana inicial-----------------------------------------------------------
 ventanaInicial = Tk()                                           #Objeto de tipo ventana
@@ -39,6 +40,24 @@ def habilitarBotones():
     btnDoubleMirror = Button(marcoInicial, text='DoubleMirror')
     btnDoubleMirror.place(x=60, y=320)
 
+def separarImagenes(entrada):
+    global imagenes
+    cadena = ''
+    contador = 0
+    for c in entrada:
+        if c == '@':
+            contador = contador + 1
+        else:
+            cadena = cadena + c
+        if contador == 4:
+            imagenes.append(cadena)
+            cadena = ''
+            contador = 0
+    print('-----------------------------------------------')
+    print(imagenes[0])
+    print('-----------------------------------------------')
+    print(imagenes[1])
+    
 def abrirArchivo():
     global rutaArchivo, archivoPXLA
 
@@ -50,11 +69,11 @@ def abrirArchivo():
     elif len(extension)>0 and extension[0] == '.pxla':
         archivoCargado = open(rutaArchivo, 'r')
         archivoPXLA = archivoCargado.read()
+        archivoPXLA = archivoPXLA + '@@@@'                              #Agregando arrobas al final del archivo
         archivoCargado.close()
-        print(rutaArchivo)
-        print(archivoPXLA)
         messagebox.showinfo('Información','Cargado con éxito')
         habilitarBotones()
+        separarImagenes(archivoPXLA)
     else:
         messagebox.showinfo('Error','El archivo seleccionado no posee extisón \'.pxla\'')
         rutaArchivo = ''
