@@ -19,11 +19,17 @@ marcoInicial = Frame(ventanaInicial, width="800", height="550")
 marcoInicial.pack()                                             #Marco agregado a la ventana
 
 #------------------------------------------Fuciones--------------------------------------------------------------
+def analizarImagenes():
+    global imagenes
+    for imagen in imagenes:
+        print(imagen)
+        print('--------------------------------------------------------')
+
 def habilitarBotones():
     global rutaArchivo
     btnCargar = Button(marcoInicial, text='Cargar', state=DISABLED)
     btnCargar.place(x=50, y=20)
-    btnAnalizar = Button(marcoInicial, text='Analizar archivo')
+    btnAnalizar = Button(marcoInicial, text='Analizar archivo', command=analizarImagenes)
     btnAnalizar.place(x=120, y=20)
     btnReportes = Button(marcoInicial, text='Ver reportes')
     btnReportes.place(x=240, y=20)
@@ -53,16 +59,12 @@ def separarImagenes(entrada):
             imagenes.append(cadena)
             cadena = ''
             contador = 0
-    print('-----------------------------------------------')
-    print(imagenes[0])
-    print('-----------------------------------------------')
-    print(imagenes[1])
     
 def abrirArchivo():
     global rutaArchivo, archivoPXLA
 
     rutaArchivo = filedialog.askopenfilename(title = "Seleccionar archivo XML")
-    extension = re.findall('(\.pxla)$', rutaArchivo)                    #<------------ ER - 1
+    extension = re.findall('(\.pxla)$', rutaArchivo)                    #<------------ ver extensión valida
     
     if rutaArchivo == '':
         messagebox.showinfo('Error','No se selecciono nigún archivo')

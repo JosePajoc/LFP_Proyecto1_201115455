@@ -1,5 +1,0 @@
-nombreArchivo.pxla
-
-pxlaEnInicio
-
-EnMediopxladelTexto
