@@ -19,11 +19,149 @@ marcoInicial = Frame(ventanaInicial, width="800", height="550")
 marcoInicial.pack()                                             #Marco agregado a la ventana
 
 #------------------------------------------Fuciones--------------------------------------------------------------
+def esLetra(caracter):
+    valor = ord(caracter)                   #Convertir ASCII a entero
+    if ((valor>= 65) and (valor<=90)) or ((valor>= 97) and (valor<=122)) or valor==165 or valor==164:
+        return True
+    else:
+        return False
+
+def esNumero(caracter):
+    valor = ord(caracter)                   #Convertir ASCII a entero
+    if ((valor>= 48) and (valor<=57)):
+        return True
+    else:
+        return False
+
+def analizar(entrada):
+    fila = 1
+    columna = 0
+    estado = 0
+    lexemaActual = ''
+
+    for c in entrada:
+        if estado == 0:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 1
+            else:
+                if ord(c) == 32 or ord(c) == 10 or ord(c) == 9:     #espacio en blanco, enter o tabulación
+                    pass
+                lexemaActual = ''
+                estado = 0
+        elif estado == 1:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 1
+            elif c == '=':
+                lexemaActual = lexemaActual + c
+                estado = 2
+            elif ord(c) == 32:          #espacio en blanco ignorado
+                pass
+            else:
+                if ord(c) == 10 or ord(c) == 9:     #enter o tabulación
+                    pass
+                lexemaActual = ''
+                estado = 0
+        elif estado == 2:
+            if c == '"':
+                lexemaActual = lexemaActual + c
+                estado = 3
+            elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 7
+            elif ord(c) == 32:          #espacio en blanco ignorado
+                pass
+            else:
+                if ord(c) == 10 or ord(c) == 9:     #enter o tabulación
+                    pass
+                lexemaActual = ''
+                estado = 0
+        elif estado == 3:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 4
+            elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 4
+            elif c == ' ':
+                lexemaActual = lexemaActual + c
+                estado = 4
+            else:
+                if ord(c) == 10 or ord(c) == 9:     #enter o tabulación
+                    pass
+                lexemaActual = ''
+                estado = 0
+        elif estado == 4:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 4
+            elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 4
+            elif c == ' ':
+                lexemaActual = lexemaActual + c
+                estado = 4
+            elif c == '"':
+                lexemaActual = lexemaActual + c
+                estado = 5
+            else:
+                if ord(c) == 10 or ord(c) == 9:     #enter o tabulación
+                    pass
+                lexemaActual = ''
+                estado = 0
+        elif estado == 5:
+            if c == ";":
+                lexemaActual = lexemaActual + c
+                estado = 6
+            else:
+                if ord(c) == 32 or ord(c) == 10 or ord(c) == 9:     #espacio en blanco, enter o tabulación
+                    pass
+                lexemaActual = ''
+                estado = 0
+        elif estado == 6:
+            print('Se reconocio en S6: ' + lexemaActual + ' fila: ' , fila , ' col: ', columna-(len(lexemaActual)-1))
+            
+            if  ord(c) == 32 or ord(c) == 10 or ord(c) == 9:     #espacio en blanco, enter o tabulación
+                pass
+                #print('Error lexico')
+            lexemaActual = ''
+            estado = 0
+        elif estado == 7:
+            if esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 7
+            elif c == ';':
+                lexemaActual = lexemaActual + c
+                estado = 6
+            else:
+                if ord(c) == 32 or ord(c) == 10 or ord(c) == 9:     #espacio en blanco, enter o tabulación
+                    pass
+                lexemaActual = ''
+                estado = 0
+        
+        # Control de filas y columnas
+        if (ord(c) == 10):              #Salto de Línea
+            columna = 0
+            fila = fila + 1
+            continue
+        elif (ord(c) == 9):             #Tabulación Horizontal
+            columna = columna +  4
+            continue
+        elif (ord(c) == 32):            #Espacio en blanco
+            columna = columna + 1
+            continue
+        
+        columna = columna + 1
+
+
 def analizarImagenes():
     global imagenes
     for imagen in imagenes:
-        print(imagen)
-        print('--------------------------------------------------------')
+        #print(imagen)
+        #print('--------------------------------------------------------')
+        analizar(imagen)
+
 
 def habilitarBotones():
     global rutaArchivo
