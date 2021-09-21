@@ -33,6 +33,13 @@ def esNumero(caracter):
     else:
         return False
 
+def imprimible(caracter):
+    valor = ord(caracter)
+    if (valor>=128 and valor<=239):
+        return True
+    else:
+        return False
+
 def analizar(entrada):
     fila = 1
     columna = 0
@@ -90,6 +97,9 @@ def analizar(entrada):
             elif esNumero(c):
                 lexemaActual = lexemaActual + c
                 estado = 4
+            elif imprimible(c):
+                lexemaActual = lexemaActual + c
+                estado = 4
             elif c == ' ':
                 lexemaActual = lexemaActual + c
                 estado = 4
@@ -103,6 +113,9 @@ def analizar(entrada):
                 lexemaActual = lexemaActual + c
                 estado = 4
             elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 4
+            elif imprimible(c):
                 lexemaActual = lexemaActual + c
                 estado = 4
             elif c == ' ':
