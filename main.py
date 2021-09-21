@@ -70,6 +70,12 @@ def analizar(entrada):
             elif esNumero(c):
                 lexemaActual = lexemaActual + c
                 estado = 7
+            elif c == '{':
+                lexemaActual = lexemaActual + c
+                estado = 8
+            elif esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 25
             elif ord(c) == 32:          #espacio en blanco ignorado
                 pass
             else:
@@ -139,6 +145,210 @@ def analizar(entrada):
                     pass
                 lexemaActual = ''
                 estado = 0
+        elif estado == 8:
+            if c == '[':
+                lexemaActual = lexemaActual + c
+                estado = 9
+            elif ord(c) == 32 or ord(c) == 10 or ord(c) == 9:     #espacio en blanco, enter o tabulación
+                    pass
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 9:
+            if esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 10
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 10:
+            if esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 10
+            elif c == ',':
+                lexemaActual = lexemaActual + c
+                estado = 11
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 11:
+            if esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 12
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 12:
+            if esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 12
+            elif c == ',':
+                lexemaActual = lexemaActual + c
+                estado = 13
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 13:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 14
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 14:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 14
+            elif c == ',':
+                lexemaActual = lexemaActual + c
+                estado = 15
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 15:
+            if c == '#':
+                lexemaActual = lexemaActual + c
+                estado = 16
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 16:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 17
+            elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 17
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 17:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 18
+            elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 18
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 18:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 19
+            elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 19
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 19:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 20
+            elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 20
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 20:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 21
+            elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 21
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 21:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 22
+            elif esNumero(c):
+                lexemaActual = lexemaActual + c
+                estado = 22
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 22:
+            if c == ']':
+                lexemaActual = lexemaActual + c
+                estado = 23
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 23:
+            if c == ',':
+                lexemaActual = lexemaActual + c
+                estado = 8
+            elif c == '}':
+                lexemaActual = lexemaActual + c
+                estado = 24
+            elif ord(c) == 32 or ord(c) == 10 or ord(c) == 9:     #espacio en blanco, enter o tabulación
+                    pass
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 24:
+            if c == ';':
+                lexemaActual = lexemaActual + c
+                estado = 6
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 25:                          #------Seguir aquí-------
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 25
+            elif c == ',':
+                lexemaActual = lexemaActual + c
+                estado = 26
+            elif c == ';':
+                lexemaActual = lexemaActual + c
+                estado = 6
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 26:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 27
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 27:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 27
+            elif c == ',':
+                lexemaActual = lexemaActual + c
+                estado = 28
+            elif c == ';':
+                lexemaActual = lexemaActual + c
+                estado = 6
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 28:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 29
+            else:
+                lexemaActual = ''
+                estado = 0
+        elif estado == 29:
+            if esLetra(c):
+                lexemaActual = lexemaActual + c
+                estado = 29
+            elif c == ';':
+                lexemaActual = lexemaActual + c
+                estado = 6
+            else:
+                lexemaActual = ''
+                estado = 0
+
         
         # Control de filas y columnas
         if (ord(c) == 10):              #Salto de Línea
@@ -159,7 +369,7 @@ def analizarImagenes():
     global imagenes
     for imagen in imagenes:
         #print(imagen)
-        #print('--------------------------------------------------------')
+        print('--------------------------------------------------------')
         analizar(imagen)
 
 
