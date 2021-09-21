@@ -56,10 +56,10 @@ def analizar(entrada):
             elif c == '=':
                 lexemaActual = lexemaActual + c
                 estado = 2
-            elif ord(c) == 32:          #espacio en blanco ignorado
+            elif ord(c) == 32 or ord(c) == 10:          #espacio en blanco ignorado
                 pass
             else:
-                if ord(c) == 10 or ord(c) == 9:     #enter o tabulación
+                if ord(c) == 9:     #enter o tabulación
                     pass
                 lexemaActual = ''
                 estado = 0
@@ -76,10 +76,10 @@ def analizar(entrada):
             elif esLetra(c):
                 lexemaActual = lexemaActual + c
                 estado = 25
-            elif ord(c) == 32:          #espacio en blanco ignorado
+            elif ord(c) == 32 or ord(c) == 10:          #espacio en blanco ignorado
                 pass
             else:
-                if ord(c) == 10 or ord(c) == 9:     #enter o tabulación
+                if ord(c) == 9:     #enter o tabulación
                     pass
                 lexemaActual = ''
                 estado = 0
@@ -298,7 +298,7 @@ def analizar(entrada):
             else:
                 lexemaActual = ''
                 estado = 0
-        elif estado == 25:                          #------Seguir aquí-------
+        elif estado == 25:                          
             if esLetra(c):
                 lexemaActual = lexemaActual + c
                 estado = 25
@@ -308,48 +308,25 @@ def analizar(entrada):
             elif c == ';':
                 lexemaActual = lexemaActual + c
                 estado = 6
+            elif ord(c) == 32:
+                pass
             else:
+                if ord(c) == 10 or ord(c) == 9:
+                    pass
                 lexemaActual = ''
                 estado = 0
         elif estado == 26:
             if esLetra(c):
                 lexemaActual = lexemaActual + c
-                estado = 27
+                estado = 25
+            elif ord(c) == 32:
+                pass
             else:
-                lexemaActual = ''
-                estado = 0
-        elif estado == 27:
-            if esLetra(c):
-                lexemaActual = lexemaActual + c
-                estado = 27
-            elif c == ',':
-                lexemaActual = lexemaActual + c
-                estado = 28
-            elif c == ';':
-                lexemaActual = lexemaActual + c
-                estado = 6
-            else:
-                lexemaActual = ''
-                estado = 0
-        elif estado == 28:
-            if esLetra(c):
-                lexemaActual = lexemaActual + c
-                estado = 29
-            else:
-                lexemaActual = ''
-                estado = 0
-        elif estado == 29:
-            if esLetra(c):
-                lexemaActual = lexemaActual + c
-                estado = 29
-            elif c == ';':
-                lexemaActual = lexemaActual + c
-                estado = 6
-            else:
+                if ord(c) == 10 or ord(c) == 9:
+                    pass
                 lexemaActual = ''
                 estado = 0
 
-        
         # Control de filas y columnas
         if (ord(c) == 10):              #Salto de Línea
             columna = 0
@@ -419,7 +396,7 @@ def abrirArchivo():
     elif len(extension)>0 and extension[0] == '.pxla':
         archivoCargado = open(rutaArchivo, 'r')
         archivoPXLA = archivoCargado.read()
-        archivoPXLA = archivoPXLA + '@@@@'                              #Agregando arrobas al final del archivo
+        archivoPXLA = archivoPXLA + '\n@@@@'                              #Agregando arrobas al final del archivo
         archivoCargado.close()
         messagebox.showinfo('Información','Cargado con éxito')
         habilitarBotones()
