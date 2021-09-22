@@ -13,6 +13,7 @@ archivoPXLA = None
 imagenes = []               #Lista donde estan las imagenes separadas
 imgObjetos = []             #Lista de imagenes tipo objeto
 reservadas = ['TITULO', 'ANCHO', 'ALTO', 'FILAS', 'COLUMNAS', 'CELDAS', 'FILTROS', 'MIRRORX', 'MIRRORY', 'DOUBLEMIRROR']
+indiceImagen = None
 
 #-------------------------------------------Ventana inicial-----------------------------------------------------------
 ventanaInicial = Tk()                                           #Objeto de tipo ventana
@@ -408,8 +409,26 @@ def habilitarBotones1():
     btnAnalizar = Button(marcoInicial, text='Analizar archivo', command=analizarImagenes)
     btnAnalizar.place(x=120, y=20)
 
+
+def verImagen():
+    global lstSeleccionarImg                    #Llamando al comboBox
+    if lstSeleccionarImg.current() < 0:
+        messagebox.showinfo('Información','Debe seleccionar una imagen')
+    else:
+        btnOriginal = Button(marcoInicial, text='ORIGINAL')
+        btnOriginal.place(x=60, y=170)
+        btnMirrorX = Button(marcoInicial, text='MirrorX')
+        btnMirrorX.place(x=60, y=220)
+        btnMirrorY = Button(marcoInicial, text='MirrorY')
+        btnMirrorY.place(x=60, y=270)
+        btnDoubleMirror = Button(marcoInicial, text='DoubleMirror')
+        btnDoubleMirror.place(x=60, y=320)
+        btnReportes = Button(marcoInicial, text='Ver reportes')
+        btnReportes.place(x=535, y=20)
+
+
 def habilitarBotones2():
-    global imgObjetos
+    global imgObjetos, lstSeleccionarImg
     titulos = []
     for imagen in imgObjetos:
         titulos.append(imagen.verTitulo())
@@ -422,18 +441,9 @@ def habilitarBotones2():
     lstSeleccionarImg.place(x=240, y=20)
     lstSeleccionarImg['values'] = titulos                                           #Valores del comboBox
 
-    btnVerImg = Button(marcoInicial, text='Ver imagen', state=DISABLED)
+    btnVerImg = Button(marcoInicial, text='Ver imagen', command=verImagen)
     btnVerImg.place(x=430, y=20)
-    btnReportes = Button(marcoInicial, text='Ver reportes', state=DISABLED)
-    btnReportes.place(x=535, y=20)
-    btnOriginal = Button(marcoInicial, text='ORIGINAL')
-    btnOriginal.place(x=60, y=170)
-    btnMirrorX = Button(marcoInicial, text='MirrorX')
-    btnMirrorX.place(x=60, y=220)
-    btnMirrorY = Button(marcoInicial, text='MirrorY')
-    btnMirrorY.place(x=60, y=270)
-    btnDoubleMirror = Button(marcoInicial, text='DoubleMirror')
-    btnDoubleMirror.place(x=60, y=320)
+    
 
 def separarImagenes(entrada):
     global imagenes
@@ -448,6 +458,7 @@ def separarImagenes(entrada):
             imagenes.append(cadena)
             cadena = ''
             contador = 0
+
     
 def abrirArchivo():
     global rutaArchivo, archivoPXLA
