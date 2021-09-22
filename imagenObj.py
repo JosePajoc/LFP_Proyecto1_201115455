@@ -95,31 +95,64 @@ class imagenObjeto():
                 self.imagen[y][x] = color
             else:
                 self.imagen[y][x] = '#FFFFFF'
-        print(self.imagen)
-
-        #FASE 4
-        #Crear imagen original en graphviz
         self.titulo = self.titulo.replace('"', '')
-        nombreGrafo = 'imagenes/' + self.titulo + '.dot'
+        self.crearGrafo(self.titulo, 'ORIGINAL')
+        if 'MIRRORX' in self.filtros:
+            self.crearGrafo('Mirror_x_' + self.titulo, 'MIRRORX')
+        if 'MIRRORY' in self.filtros:
+            self.crearGrafo('Mirror_y_' + self.titulo, 'MIRRORY')
+        if 'DOUBLEMIRROR' in self.filtros:
+            self.crearGrafo('Double_Mirror_' + self.titulo, 'DOUBLEMIRROR')
+        #print(self.imagen)
+
+    
+    def crearGrafo(self, tituloImg, tipo):
+        #Crear imagen original en graphviz
+        nombreGrafo = 'imagenes/' + tituloImg + '.dot'
         salidaImagen = open(nombreGrafo, 'w')
         salidaImagen.write('digraph G { \n')
         salidaImagen.write('node [shape=plaintext] \n')
         salidaImagen.write('a [label=<<table border="0" cellborder="1" cellspacing="0"> \n')
 
-        for y in range(self.filas):
-            salidaImagen.write('<tr>\n')
+        if tipo == 'ORIGINAL':
+            for y in range(self.filas):
+                salidaImagen.write('<tr>\n')
 
-            for x in range(self.columnas):
-                salidaImagen.write('<td bgcolor="' + self.imagen[y][x] + '"></td>')
+                for x in range(self.columnas):
+                    salidaImagen.write('<td width="20" height="20" bgcolor="' + self.imagen[y][x] + '"></td>')
 
-            salidaImagen.write('</tr>\n')
+                salidaImagen.write('</tr>\n')
+        
+        elif tipo == 'MIRRORX':
+            for y in range(self.filas):
+                col = self.columnas - 1                
+                salidaImagen.write('<tr>\n')
 
+                while col > -1:
+                    salidaImagen.write('<td width="20" height="20" bgcolor="' + self.imagen[y][col] + '"></td>')
+                    col = col - 1
+                salidaImagen.write('</tr>\n')
+        
+        elif tipo == 'MIRRORY':
+            fil = self.filas - 1
+            while fil > -1:
+                salidaImagen.write('<tr>\n')
+
+                for x in range(self.columnas):
+                    salidaImagen.write('<td width="20" height="20" bgcolor="' + self.imagen[fil][x] + '"></td>')
+                fil = fil - 1
+                salidaImagen.write('</tr>\n')
+        
+        elif tipo =='DOUBLEMIRROR':
+            pass #hacer transpuesta
 
         salidaImagen.write('</table>>]; \n')
         salidaImagen.write('}')
         salidaImagen.close()
         render('dot', 'png', nombreGrafo)                                #Renderizar el archivo DOT escrito
+
+        #crear imagenes según filtro
+        
     
     def verCeldasSep(self):
         return self.celdasSep
-
