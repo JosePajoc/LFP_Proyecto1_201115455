@@ -1,14 +1,18 @@
 from tkinter import filedialog                      #Módulo para abrir ventana de selección
 from tkinter import messagebox                      #Módulo para cuadros de mensaje
 from tkinter import *                               #Módulo para entorno gráfico
+from tkinter import ttk
 from PIL import Image, ImageTk                      #Instalar módulo, pip install Pillow, para usar imagenes con más opciones
 import re                                           #Módulo de expresiones regulares
 import webbrowser                                   #Módulo para abrir automaticamente el navegador
+from imagenObj import imagenObjeto
 
 #-----------------------------------------Variables globales-----------------------------------------------------
 rutaArchivo = ''
 archivoPXLA = None
-imagenes = []
+imagenes = []               #Lista donde estan las imagenes separadas
+imgObjetos = []             #Lista de imagenes tipo objeto
+reservadas = ['TITULO', 'ANCHO', 'ALTO', 'FILAS', 'COLUMNAS', 'CELDAS', 'FILTROS', 'MIRRORX', 'MIRRORY', 'DOUBLEMIRROR']
 
 #-------------------------------------------Ventana inicial-----------------------------------------------------------
 ventanaInicial = Tk()                                           #Objeto de tipo ventana
@@ -33,7 +37,7 @@ def esNumero(caracter):
     else:
         return False
 
-def imprimible(caracter):
+def imprimible(caracter):                   #Convertir ASCII imprimible a entero
     valor = ord(caracter)
     if (valor>=128 and valor<=239):
         return True
@@ -45,6 +49,13 @@ def analizar(entrada):
     columna = 0
     estado = 0
     lexemaActual = ''
+    tituT = None 
+    anchT = None 
+    altT = None
+    filT = None 
+    coluT = None 
+    celT = None 
+    filtrT = None
 
     for c in entrada:
         if estado == 0:
@@ -139,8 +150,33 @@ def analizar(entrada):
                 lexemaActual = ''
                 estado = 0
         elif estado == 6:
-            print('Se reconocio en S6: ' + lexemaActual + ' fila: ' , fila , ' col: ', columna-(len(lexemaActual)-1))
-            
+            valido = False
+            for palabraR in reservadas:
+                if lexemaActual.startswith(palabraR):
+                    valido = True
+            #tituT, anchT, altT, filT, coluT, celT, filtrT 
+            if valido == True:
+                if lexemaActual.startswith('TITULO'):
+                    tituT = lexemaActual
+                elif lexemaActual.startswith('ANCHO'):
+                    anchT = lexemaActual
+                elif lexemaActual.startswith('ALTO'):
+                    altT = lexemaActual
+                elif lexemaActual.startswith('FILAS'):
+                    filT = lexemaActual
+                elif lexemaActual.startswith('COLUMNAS'):
+                    coluT = lexemaActual
+                elif lexemaActual.startswith('CELDAS'):
+                    celT = lexemaActual
+                elif lexemaActual.startswith('FILTROS'):
+                    filtrT = lexemaActual
+                print('Se reconocio en S6: ' + lexemaActual + ' fila: ' , fila , ' col: ', columna-(len(lexemaActual)-1))
+
+                if tituT!=None and anchT!=None and altT!=None and filT!=None and coluT!=None and celT!=None and filtrT!=None:
+                    imgObjetos.append(imagenObjeto(tituT, anchT, altT, filT, coluT, celT, filtrT))
+                    print('#######################---> Objeto agregado con éxito')
+
+
             if  ord(c) == 32 or ord(c) == 10 or ord(c) == 9:     #espacio en blanco, enter o tabulación
                 pass
                 #print('Error lexico')
@@ -356,25 +392,40 @@ def analizar(entrada):
 
 
 def analizarImagenes():
-    global imagenes
+    global imagenes, imgObjetos
     for imagen in imagenes:
         #print(imagen)
         print('--------------------------------------------------------')
         analizar(imagen)
+    messagebox.showinfo('Información','El proceso de análisis a finalizado')
+    habilitarBotones2()
+    
 
-
-def habilitarBotones():
+def habilitarBotones1():
     global rutaArchivo
     btnCargar = Button(marcoInicial, text='Cargar', state=DISABLED)
     btnCargar.place(x=50, y=20)
     btnAnalizar = Button(marcoInicial, text='Analizar archivo', command=analizarImagenes)
     btnAnalizar.place(x=120, y=20)
-    btnReportes = Button(marcoInicial, text='Ver reportes')
-    btnReportes.place(x=240, y=20)
-    btnSeleccionarImg = Button(marcoInicial, text='Seleccionar imagen')
-    btnSeleccionarImg.place(x=330, y=20)
-    btnVerImg = Button(marcoInicial, text='Ver imagen')
-    btnVerImg.place(x=460, y=20)
+
+def habilitarBotones2():
+    global imgObjetos
+    titulos = []
+    for imagen in imgObjetos:
+        titulos.append(imagen.verTitulo())
+
+    btnCargar = Button(marcoInicial, text='Cargar', state=DISABLED)
+    btnCargar.place(x=50, y=20)
+    btnAnalizar = Button(marcoInicial, text='Analizar archivo', state=DISABLED)
+    btnAnalizar.place(x=120, y=20)
+    lstSeleccionarImg = ttk.Combobox(marcoInicial, width=25, state='readonly')      #comboBox
+    lstSeleccionarImg.place(x=240, y=20)
+    lstSeleccionarImg['values'] = titulos                                           #Valores del comboBox
+
+    btnVerImg = Button(marcoInicial, text='Ver imagen', state=DISABLED)
+    btnVerImg.place(x=430, y=20)
+    btnReportes = Button(marcoInicial, text='Ver reportes', state=DISABLED)
+    btnReportes.place(x=535, y=20)
     btnOriginal = Button(marcoInicial, text='ORIGINAL')
     btnOriginal.place(x=60, y=170)
     btnMirrorX = Button(marcoInicial, text='MirrorX')
@@ -411,8 +462,9 @@ def abrirArchivo():
         archivoPXLA = archivoCargado.read()
         archivoPXLA = archivoPXLA + '\n@@@@'                              #Agregando arrobas al final del archivo
         archivoCargado.close()
+        archivoPXLA = archivoPXLA.upper()                                 #Cambio a mayúsculas
         messagebox.showinfo('Información','Cargado con éxito')
-        habilitarBotones()
+        habilitarBotones1()
         separarImagenes(archivoPXLA)
     else:
         messagebox.showinfo('Error','El archivo seleccionado no posee extisón \'.pxla\'')
@@ -424,12 +476,12 @@ btnCargar = Button(marcoInicial, text='Cargar', command=abrirArchivo)
 btnCargar.place(x=50, y=20)
 btnAnalizar = Button(marcoInicial, text='Analizar archivo', state=DISABLED)
 btnAnalizar.place(x=120, y=20)
-btnReportes = Button(marcoInicial, text='Ver reportes', state=DISABLED)
-btnReportes.place(x=240, y=20)
-btnSeleccionarImg = Button(marcoInicial, text='Seleccionar imagen', state=DISABLED)
-btnSeleccionarImg.place(x=330, y=20)
+lstSeleccionarImg = ttk.Combobox(marcoInicial, width=25, state=DISABLED)
+lstSeleccionarImg.place(x=240, y=20)
 btnVerImg = Button(marcoInicial, text='Ver imagen', state=DISABLED)
-btnVerImg.place(x=460, y=20)
+btnVerImg.place(x=430, y=20)
+btnReportes = Button(marcoInicial, text='Ver reportes', state=DISABLED)
+btnReportes.place(x=535, y=20)
 btnOriginal = Button(marcoInicial, text='ORIGINAL', state=DISABLED)
 btnOriginal.place(x=60, y=170)
 btnMirrorX = Button(marcoInicial, text='MirrorX', state=DISABLED)
