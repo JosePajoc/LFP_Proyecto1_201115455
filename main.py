@@ -415,14 +415,12 @@ def analizarImagenes():
         analizar(imagen)
     
     habilitarBotones2()
-    print('\n#########----------------$$$$$$$$$$$$$$$$$')
+    '''print('\n#########----------------$$$$$$$$$$$$$$$$$')
     print(imgObjetos[0].verCeldas())
     print('celdas separadas de la posición 0')
     imgObjetos[0].separarCeldas()
-    print('\n#########----------------$$$$$$$$$$$$$$$$$')
-    print(imgObjetos[0].verCeldas())
-    print('celdas separadas de la posición 1')
-    imgObjetos[1].separarCeldas()
+    
+    imgObjetos[1].separarCeldas()'''
 
     #print(imgObjetos[0].verCeldasSep())
     

@@ -1,3 +1,5 @@
+from graphviz import render
+
 class imagenObjeto():
     def __init__(self, titulo, ancho, alto, filas, columnas, celdas, filtros):
         self.titulo = titulo
@@ -97,7 +99,26 @@ class imagenObjeto():
 
         #FASE 4
         #Crear imagen original en graphviz
-        
+        self.titulo = self.titulo.replace('"', '')
+        nombreGrafo = 'imagenes/' + self.titulo + '.dot'
+        salidaImagen = open(nombreGrafo, 'w')
+        salidaImagen.write('digraph G { \n')
+        salidaImagen.write('node [shape=plaintext] \n')
+        salidaImagen.write('a [label=<<table border="0" cellborder="1" cellspacing="0"> \n')
+
+        for y in range(self.filas):
+            salidaImagen.write('<tr>\n')
+
+            for x in range(self.columnas):
+                salidaImagen.write('<td bgcolor="' + self.imagen[y][x] + '"></td>')
+
+            salidaImagen.write('</tr>\n')
+
+
+        salidaImagen.write('</table>>]; \n')
+        salidaImagen.write('}')
+        salidaImagen.close()
+        render('dot', 'png', nombreGrafo)                                #Renderizar el archivo DOT escrito
     
     def verCeldasSep(self):
         return self.celdasSep
