@@ -174,7 +174,22 @@ def analizar(entrada):
                 print('Se reconocio en S6: ' + lexemaActual + ' fila: ' , fila , ' col: ', columna-(len(lexemaActual)-1))
 
                 if tituT!=None and anchT!=None and altT!=None and filT!=None and coluT!=None and celT!=None and filtrT!=None:
-                    imgObjetos.append(imagenObjeto(tituT, anchT, altT, filT, coluT, celT, filtrT))
+                    tituT = tituT.replace('TITULO=', '')
+                    tituT = tituT.replace(';', '')
+                    anchT = anchT.replace('ANCHO=', '')
+                    anchT = anchT.replace(';', '')
+                    altT = altT.replace('ALTO=', '')
+                    altT = altT.replace(';', '')
+                    filT = filT.replace('FILA=', '')
+                    filT = filT.replace(';', '')
+                    coluT = coluT.replace('COLUMNAS=', '')
+                    coluT = coluT.replace(';', '')
+                    celT = celT.replace('CELDAS={', '')
+                    celT = celT.replace('};', '')
+                    celT = celT + ','
+                    filtrT = filtrT.replace('FILTROS=', '')
+                    filtrT = filtrT.replace(';', '')
+                    imgObjetos.append(imagenObjeto(tituT, anchT, altT, filT, coluT, celT, filtrT))  #Agregando objeto a la lista
                     print('#######################---> Objeto agregado con éxito')
 
 
@@ -398,8 +413,17 @@ def analizarImagenes():
         #print(imagen)
         print('--------------------------------------------------------')
         analizar(imagen)
-    messagebox.showinfo('Información','El proceso de análisis a finalizado')
+    
     habilitarBotones2()
+    print('#########-----SEGUIR AQUÍ-----------$$$$$$$$$$$$$$$$$')
+    print('#########----------------$$$$$$$$$$$$$$$$$')
+    print(imgObjetos[0].verCeldas())
+    print('celdas separadas de la posición 0')
+    imgObjetos[0].separarCeldas()
+    print(imgObjetos[0].verCeldasSep())
+
+    messagebox.showinfo('Información','El proceso de análisis a finalizado')
+
     
 
 def habilitarBotones1():
@@ -411,7 +435,7 @@ def habilitarBotones1():
 
 
 def verImagen():
-    global lstSeleccionarImg                    #Llamando al comboBox
+    global lstSeleccionarImg                       #Llamando al comboBox
     if lstSeleccionarImg.current() < 0:
         messagebox.showinfo('Información','Debe seleccionar una imagen')
     else:
