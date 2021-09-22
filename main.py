@@ -180,7 +180,7 @@ def analizar(entrada):
                     anchT = anchT.replace(';', '')
                     altT = altT.replace('ALTO=', '')
                     altT = altT.replace(';', '')
-                    filT = filT.replace('FILA=', '')
+                    filT = filT.replace('FILAS=', '')
                     filT = filT.replace(';', '')
                     coluT = coluT.replace('COLUMNAS=', '')
                     coluT = coluT.replace(';', '')
@@ -189,7 +189,7 @@ def analizar(entrada):
                     celT = celT + ','
                     filtrT = filtrT.replace('FILTROS=', '')
                     filtrT = filtrT.replace(';', '')
-                    imgObjetos.append(imagenObjeto(tituT, anchT, altT, filT, coluT, celT, filtrT))  #Agregando objeto a la lista
+                    imgObjetos.append(imagenObjeto(tituT, int(anchT), int(altT), int(filT), int(coluT), celT, filtrT))  #Agregando objeto a la lista
                     print('#######################---> Objeto agregado con éxito')
 
 
@@ -415,12 +415,17 @@ def analizarImagenes():
         analizar(imagen)
     
     habilitarBotones2()
-    print('#########-----SEGUIR AQUÍ-----------$$$$$$$$$$$$$$$$$')
-    print('#########----------------$$$$$$$$$$$$$$$$$')
+    print('\n#########----------------$$$$$$$$$$$$$$$$$')
     print(imgObjetos[0].verCeldas())
     print('celdas separadas de la posición 0')
     imgObjetos[0].separarCeldas()
-    print(imgObjetos[0].verCeldasSep())
+    print('\n#########----------------$$$$$$$$$$$$$$$$$')
+    print(imgObjetos[0].verCeldas())
+    print('celdas separadas de la posición 1')
+    imgObjetos[1].separarCeldas()
+
+    #print(imgObjetos[0].verCeldasSep())
+    
 
     messagebox.showinfo('Información','El proceso de análisis a finalizado')
 

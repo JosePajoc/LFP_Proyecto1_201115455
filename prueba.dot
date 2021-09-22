@@ -1,0 +1,17 @@
+digraph G {
+        node [shape=plaintext]
+        a [label=<<table border="0" cellborder="1" cellspacing="0">
+
+            <tr>
+                <td bgcolor="#5AFAA0"> </td>
+                <td bgcolor="#00FF00"> </td>
+                <td>esto es una prueba</td>
+            </tr>
+            <tr>
+                <td>hola 1</td>
+                <td>hola 2</td>
+                <td>hola 3</td>
+            </tr>
+
+        </table>>];
+        }
