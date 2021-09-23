@@ -409,19 +409,16 @@ def analizar(entrada):
 
 def analizarImagenes():
     global imagenes, imgObjetos
-    for imagen in imagenes:
+    for imagen in imagenes:                     #recorrer lista de imagenes separadas por @ para aplicar automata
         #print(imagen)
         print('--------------------------------------------------------')
         analizar(imagen)
     
     habilitarBotones2()
-    print('\n#########----------------$$$$$$$$$$$$$$$$$')
-    print(imgObjetos[0].verCeldas())
-    print('celdas separadas de la posición 0')
-    imgObjetos[0].separarCeldas()                       #<-------------Pasar a FOR
-    
-    #imgObjetos[1].separarCeldas()
 
+    for indice in range(len(imgObjetos)):
+        imgObjetos[indice].separarCeldas()      #recorrer lista de objetos imagenes para crear archivo e imagen con DOT  
+        
 
     messagebox.showinfo('Información','El proceso de análisis a finalizado')
 
@@ -440,6 +437,15 @@ def verImagen():
     if lstSeleccionarImg.current() < 0:
         messagebox.showinfo('Información','Debe seleccionar una imagen')
     else:
+        nombre = lstSeleccionarImg.get()
+        nombre = nombre.replace('"', '')
+        original = Image.open('imagenes/' + nombre + '.dot.png')
+        tamanoImagen1 = original.resize((400, 350))
+        renderizadoImagen1 = ImageTk.PhotoImage(tamanoImagen1)
+        imagenlbl = Label(marcoInicial, image=renderizadoImagen1)
+        imagenlbl.image = renderizadoImagen1
+        imagenlbl.place(x=250, y=90)
+
         btnOriginal = Button(marcoInicial, text='ORIGINAL')
         btnOriginal.place(x=60, y=170)
         btnMirrorX = Button(marcoInicial, text='MirrorX')
@@ -527,7 +533,7 @@ btnMirrorY.place(x=60, y=270)
 btnDoubleMirror = Button(marcoInicial, text='DoubleMirror', state=DISABLED)
 btnDoubleMirror.place(x=60, y=320)
 
-noImagen1 = Image.open('imagenes/no-imagen.png')
+noImagen1 = Image.open('docu/no-imagen.png')
 tamanoImagen1 = noImagen1.resize((400, 350))
 renderizadoImagen1 = ImageTk.PhotoImage(tamanoImagen1)
 imagenlbl = Label(marcoInicial, image=renderizadoImagen1)

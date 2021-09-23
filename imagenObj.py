@@ -32,20 +32,6 @@ class imagenObjeto():
     
     def verFiltros(self):
         return self.filtros
-
-    def esLetra(caracter):
-        valor = ord(caracter)                   #Convertir ASCII a entero
-        if ((valor>= 65) and (valor<=90)) or ((valor>= 97) and (valor<=122)) or valor==165 or valor==164:
-            return True
-        else:
-            return False
-
-    def esNumero(caracter):
-        valor = ord(caracter)                   #Convertir ASCII a entero
-        if ((valor>= 48) and (valor<=57)):
-            return True
-        else:
-            return False
     
     def separarCeldas(self):                
         #FASE 1
@@ -144,7 +130,17 @@ class imagenObjeto():
                 salidaImagen.write('</tr>\n')
         
         elif tipo =='DOUBLEMIRROR':
-            pass #hacer transpuesta
+            fil = self.filas - 1
+            while fil > -1:
+                salidaImagen.write('<tr>\n')
+
+                col = self.columnas - 1
+                while col > -1:
+                    salidaImagen.write('<td width="20" height="20" bgcolor="' + self.imagen[fil][col] + '"></td>') #SEGUIR
+                    col = col - 1
+                fil = fil - 1
+
+                salidaImagen.write('</tr>\n')
 
         salidaImagen.write('</table>>]; \n')
         salidaImagen.write('}')
