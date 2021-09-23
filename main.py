@@ -437,25 +437,70 @@ def verImagen():
     if lstSeleccionarImg.current() < 0:
         messagebox.showinfo('Información','Debe seleccionar una imagen')
     else:
+        verOriginal()                               #ver imagen original
+        btnOriginal = Button(marcoInicial, text='ORIGINAL', command=verOriginal)
+        btnOriginal.place(x=60, y=170)
+        btnMirrorX = Button(marcoInicial, text='MirrorX', command=verMirrorX)
+        btnMirrorX.place(x=60, y=220)
+        btnMirrorY = Button(marcoInicial, text='MirrorY', command=verMirrorY)
+        btnMirrorY.place(x=60, y=270)
+        btnDoubleMirror = Button(marcoInicial, text='DoubleMirror', command=verDoble)
+        btnDoubleMirror.place(x=60, y=320)
+        btnReportes = Button(marcoInicial, text='Ver reportes')
+        btnReportes.place(x=535, y=20)
+
+def verOriginal(): 
+    global lstSeleccionarImg                       #Llamando al comboBox
+    nombre = lstSeleccionarImg.get()
+    nombre = nombre.replace('"', '')
+    original = Image.open('imagenes/' + nombre + '.dot.png')
+    tamanoImagen1 = original.resize((400, 350))
+    renderizadoImagen1 = ImageTk.PhotoImage(tamanoImagen1)
+    imagenlbl = Label(marcoInicial, image=renderizadoImagen1)
+    imagenlbl.image = renderizadoImagen1
+    imagenlbl.place(x=250, y=90)
+
+def verMirrorX():
+    global lstSeleccionarImg                       #Llamando al comboBox
+    try:
         nombre = lstSeleccionarImg.get()
         nombre = nombre.replace('"', '')
-        original = Image.open('imagenes/' + nombre + '.dot.png')
-        tamanoImagen1 = original.resize((400, 350))
+        imgX = Image.open('imagenes/Mirror_x_' + nombre + '.dot.png')
+        tamanoImagen1 = imgX.resize((400, 350))
         renderizadoImagen1 = ImageTk.PhotoImage(tamanoImagen1)
         imagenlbl = Label(marcoInicial, image=renderizadoImagen1)
         imagenlbl.image = renderizadoImagen1
         imagenlbl.place(x=250, y=90)
+    except:
+        messagebox.showinfo('Información','Este filtro no esta activo para esta imagen')
 
-        btnOriginal = Button(marcoInicial, text='ORIGINAL')
-        btnOriginal.place(x=60, y=170)
-        btnMirrorX = Button(marcoInicial, text='MirrorX')
-        btnMirrorX.place(x=60, y=220)
-        btnMirrorY = Button(marcoInicial, text='MirrorY')
-        btnMirrorY.place(x=60, y=270)
-        btnDoubleMirror = Button(marcoInicial, text='DoubleMirror')
-        btnDoubleMirror.place(x=60, y=320)
-        btnReportes = Button(marcoInicial, text='Ver reportes')
-        btnReportes.place(x=535, y=20)
+def verMirrorY():
+    global lstSeleccionarImg                       #Llamando al comboBox
+    try:
+        nombre = lstSeleccionarImg.get()
+        nombre = nombre.replace('"', '')
+        imgY = Image.open('imagenes/Mirror_y_' + nombre + '.dot.png')
+        tamanoImagen1 = imgY.resize((400, 350))
+        renderizadoImagen1 = ImageTk.PhotoImage(tamanoImagen1)
+        imagenlbl = Label(marcoInicial, image=renderizadoImagen1)
+        imagenlbl.image = renderizadoImagen1
+        imagenlbl.place(x=250, y=90)
+    except:
+        messagebox.showinfo('Información','Este filtro no esta activo para esta imagen')
+    
+def verDoble():
+    global lstSeleccionarImg                       #Llamando al comboBox
+    try:
+        nombre = lstSeleccionarImg.get()
+        nombre = nombre.replace('"', '')
+        dobleM = Image.open('imagenes/Double_Mirror_' + nombre + '.dot.png')
+        tamanoImagen1 = dobleM.resize((400, 350))
+        renderizadoImagen1 = ImageTk.PhotoImage(tamanoImagen1)
+        imagenlbl = Label(marcoInicial, image=renderizadoImagen1)
+        imagenlbl.image = renderizadoImagen1
+        imagenlbl.place(x=250, y=90)
+    except:
+        messagebox.showinfo('Información','Este filtro no esta activo para esta imagen')
 
 
 def habilitarBotones2():

@@ -81,19 +81,25 @@ class imagenObjeto():
                 self.imagen[y][x] = color
             else:
                 self.imagen[y][x] = '#FFFFFF'
+        
         self.titulo = self.titulo.replace('"', '')
         self.crearGrafo(self.titulo, 'ORIGINAL')
+        self.crearHTML(self.titulo, 'ORIGINAL', self.ancho, self.alto)
+        
         if 'MIRRORX' in self.filtros:
             self.crearGrafo('Mirror_x_' + self.titulo, 'MIRRORX')
+            self.crearHTML('Mirror_x_' + self.titulo, 'MIRRORX', self.ancho, self.alto)
         if 'MIRRORY' in self.filtros:
             self.crearGrafo('Mirror_y_' + self.titulo, 'MIRRORY')
+            self.crearHTML('Mirror_y_' + self.titulo, 'MIRRORY', self.ancho, self.alto)
         if 'DOUBLEMIRROR' in self.filtros:
             self.crearGrafo('Double_Mirror_' + self.titulo, 'DOUBLEMIRROR')
+            self.crearHTML('Double_Mirror_' + self.titulo, 'DOUBLEMIRROR', self.ancho, self.alto)
         #print(self.imagen)
 
     
     def crearGrafo(self, tituloImg, tipo):
-        #Crear imagen original en graphviz
+        #Crear imagen original y por el tipo de filtro en graphviz
         nombreGrafo = 'imagenes/' + tituloImg + '.dot'
         salidaImagen = open(nombreGrafo, 'w')
         salidaImagen.write('digraph G { \n')
@@ -147,8 +153,36 @@ class imagenObjeto():
         salidaImagen.close()
         render('dot', 'png', nombreGrafo)                                #Renderizar el archivo DOT escrito
 
-        #crear imagenes según filtro
+
+    def crearHTML(self, tituloImg, tipo, ancho, alto):
+        archivoCSS = open("html/estilos.css", "w")
+        contenidoCSS = """html {   font-size: 20px; font-family: 'Open Sans', sans-serif; } \n
+                    h1 { font-size: 60px; text-align: center; } \n
+                    p, li {   font-size: 16px;   line-height: 2;   letter-spacing: 1px; }\n
+                    html { background-color: #00539F; }
+                    body { width: 1100px; margin: 0 auto; background-color: #FF9500; padding: 0 20px 20px 20px; border: 5px solid black; }
+                    h1 { margin: 0; padding: 20px 0; color: #00539F; text-shadow: 3px 3px 1px black; }"""
+        archivoCSS.write(contenidoCSS)
+        archivoCSS.close()
+
+        nombreGrafo = 'html/' + tituloImg + '.html'
+        archivoHTML = open(nombreGrafo, 'w')
+        archivoHTML.write('<!doctype html> \n')
+        archivoHTML.write('<html> \n')
+        archivoHTML.write('<head>\n')
+        archivoHTML.write('\t<title>' + tituloImg +'</title>\n')
+        archivoHTML.write('\t<link href="estilos.css" rel="stylesheet" type="text/css">\n')
+        archivoHTML.write('</head>\n')
+        archivoHTML.write("<body>\n")
+        archivoHTML.write('<h1>' + tituloImg + '</h1>\n')
+   
+        archivoHTML.write('<h3> tipo de filtro: ' + tipo + '</h3>\n')
+        archivoHTML.write('<img src="../imagenes/' + tituloImg + '.dot.png" width="' + str(ancho) + '" heigth="' + str(alto) + '">\n')
         
+        archivoHTML.write("</body>\n")
+        archivoHTML.write("</html>\n")
+        archivoHTML.close()
+
     
     def verCeldasSep(self):
         return self.celdasSep
