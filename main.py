@@ -6,6 +6,7 @@ from PIL import Image, ImageTk                      #Instalar módulo, pip insta
 import re                                           #Módulo de expresiones regulares
 import webbrowser                                   #Módulo para abrir automaticamente el navegador
 from imagenObj import imagenObjeto
+from lexemas import lexema
 
 #-----------------------------------------Variables globales-----------------------------------------------------
 rutaArchivo = ''
@@ -14,6 +15,8 @@ imagenes = []               #Lista donde estan las imagenes separadas
 imgObjetos = []             #Lista de imagenes tipo objeto
 reservadas = ['TITULO', 'ANCHO', 'ALTO', 'FILAS', 'COLUMNAS', 'CELDAS', 'FILTROS', 'MIRRORX', 'MIRRORY', 'DOUBLEMIRROR']
 indiceImagen = None
+lexemasValidos = []
+lexemasError = []
 
 #-------------------------------------------Ventana inicial-----------------------------------------------------------
 ventanaInicial = Tk()                                           #Objeto de tipo ventana
@@ -172,6 +175,7 @@ def analizar(entrada):
                 elif lexemaActual.startswith('FILTROS'):
                     filtrT = lexemaActual
                 print('Se reconocio en S6: ' + lexemaActual + ' fila: ' , fila , ' col: ', columna-(len(lexemaActual)-1))
+                lexemasValidos.append(lexema(lexemaActual, fila, columna-(len(lexemaActual)-1)))
 
                 if tituT!=None and anchT!=None and altT!=None and filT!=None and coluT!=None and celT!=None and filtrT!=None:
                     tituT = tituT.replace('TITULO=', '')
@@ -191,11 +195,12 @@ def analizar(entrada):
                     filtrT = filtrT.replace(';', '')
                     imgObjetos.append(imagenObjeto(tituT, int(anchT), int(altT), int(filT), int(coluT), celT, filtrT))  #Agregando objeto a la lista
                     print('#######################---> Objeto agregado con éxito')
-
+            else:
+                lexemasError.append(lexema(lexemaActual, fila, columna-(len(lexemaActual)-1)))
 
             if  ord(c) == 32 or ord(c) == 10 or ord(c) == 9:     #espacio en blanco, enter o tabulación
                 pass
-                #print('Error lexico')
+            
             lexemaActual = ''
             estado = 0
         elif estado == 7:
@@ -419,10 +424,8 @@ def analizarImagenes():
     for indice in range(len(imgObjetos)):
         imgObjetos[indice].separarCeldas()      #recorrer lista de objetos imagenes para crear archivo e imagen con DOT  
         
-
     messagebox.showinfo('Información','El proceso de análisis a finalizado')
 
-    
 
 def habilitarBotones1():
     global rutaArchivo
@@ -430,6 +433,66 @@ def habilitarBotones1():
     btnCargar.place(x=50, y=20)
     btnAnalizar = Button(marcoInicial, text='Analizar archivo', command=analizarImagenes)
     btnAnalizar.place(x=120, y=20)
+    btnReportes = Button(marcoInicial, text='Ver reportes', command=verReporte)
+    btnReportes.place(x=535, y=20)
+
+def verReporte():
+    nombreHTML = 'html/Reporte.html'
+    archivoHTML = open(nombreHTML, 'w')
+    archivoHTML.write('<!doctype html> \n')
+    archivoHTML.write('<html> \n')
+    archivoHTML.write('<head>\n')
+    archivoHTML.write('\t<title>Reporte</title>\n')
+    archivoHTML.write('\t<link href="estilos.css" rel="stylesheet" type="text/css">\n')
+    archivoHTML.write('</head>\n')
+    archivoHTML.write("<body>\n")
+    archivoHTML.write('<h1>Reporte de tokens</h1>\n')
+    archivoHTML.write('<table border = "1">\n')
+    archivoHTML.write('<tr>\n')
+    archivoHTML.write('\t<td>índice</td>\n')
+    archivoHTML.write('\t<td>Token</td>\n')
+    archivoHTML.write('\t<td>Lexema</td>\n')
+    archivoHTML.write('\t<td>Fila</td>\n')
+    archivoHTML.write('\t<td>Columna</td>\n')
+    archivoHTML.write('</tr>\n')
+    contador = 0
+    for lex in lexemasValidos:
+        archivoHTML.write('<tr>\n')
+        archivoHTML.write('\t<td>'  + str(contador) + '</td>\n')
+        archivoHTML.write('\t<td>Identificador</td>\n')
+        archivoHTML.write('\t<td>'  + lex.verLexe() + '</td>\n')
+        archivoHTML.write('\t<td>'  + str(lex.verFila()) + '</td>\n')
+        archivoHTML.write('\t<td>'  + str(lex.verColumna()) + '</td>\n')
+        archivoHTML.write('</tr>\n')
+        contador = contador + 1
+
+    archivoHTML.write('</table>\n')
+
+    archivoHTML.write('<h1>Errores</h1>\n')
+    archivoHTML.write('<table border = "1">\n')
+    archivoHTML.write('<tr>\n')
+    archivoHTML.write('\t<td>índice</td>\n')
+    archivoHTML.write('\t<td>Error</td>\n')
+    archivoHTML.write('\t<td>Fila</td>\n')
+    archivoHTML.write('\t<td>Columna</td>\n')
+    archivoHTML.write('</tr>\n')
+    contador = 0
+    for lex in lexemasError:
+        archivoHTML.write('<tr>\n')
+        archivoHTML.write('\t<td>'  + str(contador) + '</td>\n')
+        archivoHTML.write('\t<td>'  + lex.verLexe() + '</td>\n')
+        archivoHTML.write('\t<td>'  + str(lex.verFila()) + '</td>\n')
+        archivoHTML.write('\t<td>'  + str(lex.verColumna()) + '</td>\n')
+        archivoHTML.write('</tr>\n')
+        contador = contador + 1
+    archivoHTML.write('</table>\n')
+
+    archivoHTML.write("</body>\n")
+    archivoHTML.write("</html>\n")
+    archivoHTML.close()
+    
+    webbrowser.open_new_tab("html\Reporte.html")
+    
 
 
 def verImagen():
@@ -446,8 +509,7 @@ def verImagen():
         btnMirrorY.place(x=60, y=270)
         btnDoubleMirror = Button(marcoInicial, text='DoubleMirror', command=verDoble)
         btnDoubleMirror.place(x=60, y=320)
-        btnReportes = Button(marcoInicial, text='Ver reportes')
-        btnReportes.place(x=535, y=20)
+
 
 def verOriginal(): 
     global lstSeleccionarImg                       #Llamando al comboBox
