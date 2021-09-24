@@ -1,7 +1,7 @@
 from tkinter import filedialog                      #Módulo para abrir ventana de selección
 from tkinter import messagebox                      #Módulo para cuadros de mensaje
 from tkinter import *                               #Módulo para entorno gráfico
-from tkinter import ttk
+from tkinter import ttk                             #Módulo para usar comboBox
 from PIL import Image, ImageTk                      #Instalar módulo, pip install Pillow, para usar imagenes con más opciones
 import re                                           #Módulo de expresiones regulares
 import webbrowser                                   #Módulo para abrir automaticamente el navegador
